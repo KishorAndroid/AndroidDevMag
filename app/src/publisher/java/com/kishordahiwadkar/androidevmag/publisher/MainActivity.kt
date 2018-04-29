@@ -67,20 +67,23 @@ class MainActivity : AppCompatActivity() {
             var dbRef = firebaseDB.getReference("articles")
 
             dbRef.push().setValue(newItem)
-            dbRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Snackbar.make(fab, "Data changed", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Snackbar.make(fab, "Error : " + error.message , Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show()
-                }
-            })
+            dbRef.removeEventListener(valueEventListener)
+            dbRef.addValueEventListener(valueEventListener)
 
         } else {
             Snackbar.make(fab, "Enter title and description", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+    }
+
+    private val valueEventListener = object : ValueEventListener {
+        override fun onCancelled(databaseError: DatabaseError?) {
+            Snackbar.make(fab, "Error occurred : " + databaseError?.message, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+
+        override fun onDataChange(p0: DataSnapshot?) {
+            Snackbar.make(fab, "Data published", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
     }

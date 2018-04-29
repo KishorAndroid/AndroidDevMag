@@ -1,4 +1,4 @@
-package com.kishordahiwadkar.androidevmag
+package com.kishordahiwadkar.androidevmag.reader
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

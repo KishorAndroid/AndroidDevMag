@@ -1,11 +1,17 @@
-package com.kishordahiwadkar.androidevmag
+package com.kishordahiwadkar.androidevmag.reader
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_main.*
+import android.view.View
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.kishordahiwadkar.androidevmag.R
+import kotlinx.android.synthetic.reader.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,11 +22,41 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
+    }
 
-        setViewPager()
+    override fun onStart() {
+        super.onStart()
+        anonymousAuthentication()
+    }
+
+    private fun anonymousAuthentication() {
+        val mAuth = FirebaseAuth.getInstance()
+        var user: FirebaseUser? = mAuth.currentUser
+        if (user == null) {
+            authenticateUser()
+        } else {
+            setViewPager()
+        }
+    }
+
+    private fun authenticateUser() {
+        progressBar.visibility = View.VISIBLE
+        container.visibility = View.GONE
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                setViewPager()
+            } else {
+                progressBar.visibility = View.GONE
+                Toast.makeText(applicationContext, "Error occured : " + task.exception, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setViewPager() {
+
+        progressBar.visibility = View.GONE
+        container.visibility = View.VISIBLE
+
         var list: MutableList<FeedFragment> = mutableListOf<FeedFragment>()
 
         setFragments(list)
@@ -51,21 +87,5 @@ class MainActivity : AppCompatActivity() {
         var podcastFragment = FeedFragment()
         podcastFragment.setTitle("Podcasts")
         list.add(podcastFragment)
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
-        if (id == R.id.action_settings) {
-            return true
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }
