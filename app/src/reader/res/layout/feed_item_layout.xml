@@ -24,6 +24,7 @@
             app:layout_constraintGuide_percent="0.20" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/ic_fiber_new_black_24dp"

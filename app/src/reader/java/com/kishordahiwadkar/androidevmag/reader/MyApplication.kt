@@ -1,0 +1,10 @@
+package com.kishordahiwadkar.androidevmag.reader
+
+import android.app.Application
+
+class MyApplication : Application(){
+
+    override fun onCreate() {
+        super.onCreate()
+    }
+}

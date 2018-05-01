@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.kishordahiwadkar.androidevmag.R
 import com.kishordahiwadkar.androidevmag.models.NewsItem
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.reader.feed_item_layout.view.*
 
 class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
@@ -20,12 +21,17 @@ class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : Recy
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.title.text = items[position].title
         holder.description.text = items[position].description
+        if (!items[position].imageUri?.isEmpty()!!) {
+            Picasso.get().load(items[position].imageUri).into(holder.imageView)
+        }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.textTitle!!
         val description = view.textDescription!!
+        val imageView = view.imageView!!
     }
 }
