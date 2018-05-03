@@ -2,9 +2,8 @@ package com.kishordahiwadkar.androidevmag.reader
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -68,6 +67,20 @@ class MainActivity : AppCompatActivity() {
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+
+        container.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+
+            }
+        })
     }
 
     private fun setFragments(list: MutableList<FeedFragment>) {
