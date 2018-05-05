@@ -2,6 +2,7 @@ package com.kishordahiwadkar.androidevmag.reader
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
@@ -49,9 +50,10 @@ class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : Recy
         val title = view.textTitle!!
         val description = view.textDescription!!
         val imageView = view.imageView!!
+        val imageViewLoader = view.imageViewLoader!!
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-
+            showImageLoader()
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) {
@@ -60,8 +62,7 @@ class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : Recy
 
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
             if (bitmap != null) {
-                val drawable = BitmapDrawable(context.resources, bitmap)
-                imageView.setImageDrawable(drawable)
+                showImage(bitmap)
                 Palette.from(bitmap).generate { palette ->
                     val vibrantSwatch = palette.vibrantSwatch
                     rlParent.setBackgroundColor(palette.getVibrantColor(ContextCompat.getColor(context, R.color.colorAccent)))
@@ -71,6 +72,22 @@ class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : Recy
                     }
                 }
             }
+        }
+
+        private fun showImage(bitmap: Bitmap) {
+            imageView.visibility = View.VISIBLE
+            imageViewLoader.visibility = View.INVISIBLE
+            val drawable = BitmapDrawable(context.resources, bitmap)
+            imageView.setImageDrawable(drawable)
+        }
+
+        private fun showImageLoader() {
+            imageView.visibility = View.INVISIBLE
+            imageViewLoader.visibility = View.VISIBLE
+
+            val drawable = imageViewLoader.drawable
+            val avd = drawable as AnimatedVectorDrawable
+            avd.start()
         }
     }
 }
