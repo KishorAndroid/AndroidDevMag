@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishordahiwadkar.androidevmag.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.publisher.image_item_layout.view.*
 
 class ImagesAdapter(val items: MutableList<String>, val context: Context, val imageAdapterClickListener: ImageAdapterClickListener) : RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
@@ -19,18 +20,17 @@ class ImagesAdapter(val items: MutableList<String>, val context: Context, val im
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.imageView.setImageURI(items[position])
-        holder.bind(holder, position)
+        Picasso.with(context)
+                .load(items[position])
+                .into(holder.imageView)
+        holder.imageView.setOnClickListener(holder)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView = view.simpleDraweeView!!
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        val imageView = view.imageView!!
 
-        fun bind(holder: ViewHolder, position: Int) {
-
-            holder.imageView.setOnClickListener {
-                imageAdapterClickListener.onImageClickListener(position)
-            }
+        override fun onClick(v: View?) {
+            imageAdapterClickListener.onImageClickListener(position)
         }
     }
 }

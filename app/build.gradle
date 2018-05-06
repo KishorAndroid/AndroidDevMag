@@ -57,6 +57,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     kapt 'com.android.databinding:compiler:3.1.2'
 
@@ -64,10 +65,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    readerImplementation 'com.squareup.picasso:picasso:2.5.2'
     readerImplementation 'com.android.support:palette-v7:27.1.1'
 
-    publisherImplementation 'com.facebook.fresco:fresco:1.9.0'
     publisherImplementation 'org.jsoup:jsoup:1.11.3'
 }
 

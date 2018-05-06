@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.TextUtils
 import android.util.Log
 import android.widget.TextView
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
 
         if (Intent.ACTION_SEND == action && type != null) {
             if ("text/plain" == type) {
-                //parseDocument(intent.getStringExtra(Intent.EXTRA_TEXT))
 
                 async (UI) {
                     val result = bg { run(intent.getStringExtra(Intent.EXTRA_TEXT)) }
@@ -47,16 +47,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
 
             anonymousAuthentication()
 
         }
-    }
-
-    private fun parseDocument(stringExtra: String?) {
-        val thread = SimpleThread(stringExtra!!)
-        thread.start()
     }
 
     private fun run(stringExtra: String) {
@@ -100,64 +95,12 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.runOnUiThread({
                 editTitle.setText(title, TextView.BufferType.EDITABLE)
                 editDescription.setText(description, TextView.BufferType.EDITABLE)
+                rvDocumentImages.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                 rvDocumentImages.adapter = ImagesAdapter(imageList, this@MainActivity, imageAdapterClickListener)
-                rvDocumentImages.layoutManager = android.support.v7.widget.StaggeredGridLayoutManager(2, android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL)
             })
 
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-    inner class SimpleThread(private val stringExtra: String) : Thread() {
-        override fun run() {
-            try {
-
-                var title: String?
-                var description = ""
-
-                Log.d(tag, stringExtra)
-
-                val document: Document = Jsoup.connect(stringExtra).get()
-
-                title = document.title()
-
-                val metaTags = document.getElementsByTag("meta")
-
-                for (metaTag: Element in metaTags) {
-                    val content = metaTag.attr("content")
-                    val name = metaTag.attr("name")
-
-                    if (name == "og:description" || name == "description") {
-                        description = content
-                    }
-                }
-
-                Log.d(tag, title)
-                Log.d(tag, description)
-
-                val imageTags = document.getElementsByTag("img")
-
-                for (imageTag: Element in imageTags) {
-                    val src = imageTag.absUrl("src")
-                    if (src.contains(".png", true) ||
-                            src.contains(".jpg", true) ||
-                            src.contains(".jpeg", true)) {
-                        Log.d(tag, src)
-                        imageList.add(src)
-                    }
-                }
-
-                this@MainActivity.runOnUiThread({
-                    editTitle.setText(title, TextView.BufferType.EDITABLE)
-                    editDescription.setText(description, TextView.BufferType.EDITABLE)
-                    rvDocumentImages.adapter = ImagesAdapter(imageList, this@MainActivity, imageAdapterClickListener)
-                    rvDocumentImages.layoutManager = android.support.v7.widget.StaggeredGridLayoutManager(2, android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL)
-                })
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 
@@ -212,7 +155,6 @@ class MainActivity : AppCompatActivity() {
             var dbRef = firebaseDB.getReference("articles")
 
             dbRef.push().setValue(newItem)
-            dbRef.removeEventListener(valueEventListener)
             dbRef.addValueEventListener(valueEventListener)
 
         } else {
