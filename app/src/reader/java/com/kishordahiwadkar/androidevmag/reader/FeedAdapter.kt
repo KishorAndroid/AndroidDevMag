@@ -37,10 +37,7 @@ class FeedAdapter(val items: MutableList<NewsItem>, val context: Context) : Recy
         holder.title.text = items[position].title
         holder.description.text = items[position].description
         if (!items[position].imageUri?.isEmpty()!!) {
-            Picasso.with(context)
-                    .load(items[position].imageUri)
-                    .resize(0, context.resources.getDimensionPixelSize(R.dimen.article_image_min_height))
-                    .into(holder)
+            holder.imageView.loadUrl(imageUrl = items[position].imageUri)
         }
     }
 
